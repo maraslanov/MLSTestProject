@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 )
 public class FilterDataServlet extends HttpServlet {
 
+    private static Logger log = Logger.getLogger(DataModel.class.getName());
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //getting input params from request for Select params
@@ -43,7 +46,7 @@ public class FilterDataServlet extends HttpServlet {
             if (!req.getParameter(Consts.Filter_Received_Before).equals(""))
                 ReceiveBefore = formatter.parse(req.getParameter(Consts.Filter_Received_Before));
         } catch (ParseException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Exception: ", e);
         }
         //getting data from db
         DataModel[] values = getDataModels(PN, PartName, Vendor, Qty, ShippedAfter, ShippedBefore, ReceiveAfter, ReceiveBefore);

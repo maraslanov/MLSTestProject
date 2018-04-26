@@ -1,9 +1,13 @@
 package DataService;
 
+import jdk.nashorn.internal.runtime.Debug;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Entity Operations in the OnlineShops database
@@ -16,6 +20,8 @@ public class DataModel {
     private Integer Qty;
     private Date Shipped;
     private Date Receive;
+
+    private static Logger log = Logger.getLogger(DataModel.class.getName());
 
     public DataModel(String partNumber, String partName, String vendor, Integer qty, Date shipped, Date receive) {
         PartName = partName;
@@ -36,7 +42,7 @@ public class DataModel {
             if (!receive.equals(""))Receive = formatter.parse(receive);else Receive=null;
         }
         catch (ParseException e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Exception: ", e);
         }
     }
 

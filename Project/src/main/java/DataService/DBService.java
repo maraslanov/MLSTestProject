@@ -3,6 +3,8 @@ package DataService;
 import javax.servlet.ServletException;
 import java.sql.*;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Service for SQL queries
@@ -12,6 +14,8 @@ public class DBService {
     private String username = "postgres";
     private String password = "123";
     private Connection dbcon;
+
+    private static Logger log = Logger.getLogger(DataModel.class.getName());
 
     public Connection LoadDriver(String UrlString, String username, String password) throws ServletException {
         Connection dbcon;
@@ -105,7 +109,7 @@ public class DBService {
             }
             return result;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Exception: ", e);
             return null;
         }
     }
