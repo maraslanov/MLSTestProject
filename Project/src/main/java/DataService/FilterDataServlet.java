@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 public class FilterDataServlet extends HttpServlet {
 
     private static Logger log = Logger.getLogger(DataModel.class.getName());
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //getting input params from request for Select params

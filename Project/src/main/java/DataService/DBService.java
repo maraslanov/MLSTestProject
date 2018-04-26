@@ -17,6 +17,7 @@ public class DBService {
 
     private static Logger log = Logger.getLogger(DataModel.class.getName());
 
+    //создание соединения с бд
     public Connection LoadDriver(String UrlString, String username, String password) throws ServletException {
         Connection dbcon;
         try {
@@ -24,13 +25,14 @@ public class DBService {
             dbcon = DriverManager.getConnection(UrlString, username, password);
             return dbcon;
         } catch (ClassNotFoundException e) {
-            System.err.println("ClassNotFoundException: " + e.getMessage());
+            log.log(Level.SEVERE, "ClassNotFoundException: ", e);
             throw new ServletException("Class not found Error", e);
         } catch (SQLException e) {
-            System.err.println("SQLException: " + e.getMessage());
+            log.log(Level.SEVERE, "SQLException: ", e);
         }
         return null;
     }
+
 
     public String GenerateSelectStatement(String PartNumber, String PartName, String Vendor, Integer Qty, Date ShippedAfter , Date ShippedBefore, Date ReceiveAfter, Date ReceiveBefore) {
         String str = "SELECT "+ Consts.partNumber + "," + Consts.partName + "," + Consts.vendor + "," + Consts.qty + "," + Consts.shipped + "," + Consts.received + " from "+Consts.operations_DataTable;
@@ -81,7 +83,7 @@ public class DBService {
         return str;
     }
 
-    //Executing Select Statement
+    //getting array of objects from db, input params - data from html form
     public DataModel[] getDataFromShops(String partNumber, String partName, String vendor, Integer qty, Date shipped1, Date shipped2, Date receive1, Date receive2) {
         DataModel[] result;
         try {
@@ -90,6 +92,7 @@ public class DBService {
                     ResultSet.CONCUR_UPDATABLE);
             String query = GenerateSelectStatement(partNumber, partName, vendor, qty, shipped1, shipped2, receive1, receive2);
             ResultSet rs = statement.executeQuery(query);
+            //getting record count from resultset
             int rowcount = 0;
             if (rs.last()) {
                 rowcount = rs.getRow();
@@ -97,6 +100,7 @@ public class DBService {
             }
             result = new DataModel[rowcount];
             rowcount = 0;
+            //creating array from resultset
             while (rs.next()) {
                 DataModel DM = new DataModel(rs.getString(Consts.partNumber),
                         rs.getString(Consts.partName),
@@ -107,6 +111,7 @@ public class DBService {
                 result[rowcount] = DM;
                 rowcount++;
             }
+            dbcon.close();
             return result;
         } catch (Exception e) {
             log.log(Level.SEVERE, "Exception: ", e);
