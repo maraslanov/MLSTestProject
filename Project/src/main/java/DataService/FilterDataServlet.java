@@ -49,7 +49,7 @@ public class FilterDataServlet extends HttpServlet {
         } catch (ParseException e) {
             log.log(Level.SEVERE, "Exception: ", e);
         }
-        //getting data from db
+        //getting data from db.properties
         DataModel[] values = getDataModels(PN, PartName, Vendor, Qty, ShippedAfter, ShippedBefore, ReceiveAfter, ReceiveBefore);
         req.setAttribute("DataArray", values);
         //forward from servlet to a JSP (for filling table)

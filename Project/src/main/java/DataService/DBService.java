@@ -1,8 +1,11 @@
 package DataService;
 
 import javax.servlet.ServletException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -10,23 +13,34 @@ import java.util.logging.Logger;
  * Service for SQL queries
  */
 public class DBService {
-    private String urlString = "jdbc:postgresql://localhost/OnlineShop";
-    private String username = "postgres";
-    private String password = "123";
     private Connection dbcon;
 
     private static Logger log = Logger.getLogger(DataModel.class.getName());
 
-    //создание соединения с бд
-    public Connection LoadDriver(String UrlString, String username, String password) throws ServletException {
-        Connection dbcon;
+    //creating connection with db
+    public Connection LoadDriver() throws ServletException {
+        Properties props = new Properties();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        InputStream input = classLoader.getResourceAsStream("db.properties");
+        //get connection properties from file
         try {
-            Class.forName("org.postgresql.Driver");
-            dbcon = DriverManager.getConnection(UrlString, username, password);
+            props.load(input);
+        } catch (IOException e) {
+            log.log(Level.SEVERE, "IOException: ", e);
+        }
+        String url = props.getProperty("jdbc.url");
+        String username = props.getProperty("jdbc.username");
+        String password = props.getProperty("jdbc.password");
+        String driver= props.getProperty("jdbc.driver");
+        Connection dbcon;
+        //attempt to create a connection
+        try {
+            Class.forName(driver);
+            dbcon = DriverManager.getConnection(url, username, password);
             return dbcon;
         } catch (ClassNotFoundException e) {
             log.log(Level.SEVERE, "ClassNotFoundException: ", e);
-            throw new ServletException("Class not found Error", e);
+            throw new ServletException("Class not found Error ", e);
         } catch (SQLException e) {
             log.log(Level.SEVERE, "SQLException: ", e);
         }
@@ -83,11 +97,11 @@ public class DBService {
         return str;
     }
 
-    //getting array of objects from db, input params - data from html form
+    //getting array of objects from db.properties, input params - data from html form
     public DataModel[] getDataFromShops(String partNumber, String partName, String vendor, Integer qty, Date shipped1, Date shipped2, Date receive1, Date receive2) {
         DataModel[] result;
         try {
-            dbcon = LoadDriver(urlString, username, password);
+            dbcon = LoadDriver();
             Statement statement = dbcon.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                     ResultSet.CONCUR_UPDATABLE);
             String query = GenerateSelectStatement(partNumber, partName, vendor, qty, shipped1, shipped2, receive1, receive2);
