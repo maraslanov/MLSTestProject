@@ -18,7 +18,7 @@ public class DBService {
     private static Logger log = Logger.getLogger(DataModel.class.getName());
 
     //creating connection with db
-    public Connection LoadDriver() throws ServletException {
+    private Connection LoadDriver() throws ServletException {
         Properties props = new Properties();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         InputStream input = classLoader.getResourceAsStream("db.properties");
@@ -47,7 +47,8 @@ public class DBService {
         return null;
     }
 
-    public Connection LoadDriver(String url, String username, String password, String driver) throws ServletException {
+    //for tests
+    private Connection LoadDriver(String url, String username, String password, String driver) throws ServletException {
         Connection dbcon;
         //attempt to create a connection
         try {
@@ -63,7 +64,8 @@ public class DBService {
         return null;
     }
 
-    public String GenerateSelectStatement(String PartNumber, String PartName, String Vendor, Integer Qty, Date ShippedAfter, Date ShippedBefore, Date ReceiveAfter, Date ReceiveBefore) {
+    //generate string for PrepareStatement, input params - data from html form
+    String GenerateSelectStatement(String PartNumber, String PartName, String Vendor, Integer Qty, Date ShippedAfter, Date ShippedBefore, Date ReceiveAfter, Date ReceiveBefore) {
         String str = "SELECT " + Consts.partNumber + "," + Consts.partName + "," + Consts.vendor + "," + Consts.qty + "," + Consts.shipped + "," + Consts.received + " from " + Consts.operations_DataTable;
         if ((PartNumber != null) && (PartName != null) && (Vendor != null))
             if ((!PartNumber.equals("")) || (!PartName.equals("")) || (!Vendor.equals("")) || (Qty != null) || (ShippedAfter != null) || (ShippedBefore != null) || (ReceiveAfter != null) || (ReceiveBefore != null)) {
@@ -113,10 +115,11 @@ public class DBService {
     }
 
     //getting array of objects from db.properties, input params - data from html form
-    public DataModel[] getDataFromShops(String partNumber, String partName, String vendor, Integer qty, Date shipped1, Date shipped2, Date receive1, Date receive2) {
+    DataModel[] getDataFromShops(String partNumber, String partName, String vendor, Integer qty, Date shipped1, Date shipped2, Date receive1, Date receive2) {
         DataModel[] result;
         try {
             dbcon = LoadDriver();
+            //result set params are necessary for forward and back result
             PreparedStatement pStatement = dbcon.prepareStatement(GenerateSelectStatement(partNumber, partName, vendor, qty, shipped1, shipped2, receive1, receive2),
                     ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = null;
@@ -129,7 +132,7 @@ public class DBService {
             if (shipped1 !=null) pStatement.setDate(i++, new java.sql.Date(shipped1.getTime()));
             if (shipped2 !=null) pStatement.setDate(i++, new java.sql.Date(shipped2.getTime()));
             if (receive1 !=null) pStatement.setDate(i++, new java.sql.Date(receive1.getTime()));
-            if (receive2 !=null) pStatement.setDate(i++, new java.sql.Date(receive2.getTime()));
+            if (receive2 !=null) pStatement.setDate(i, new java.sql.Date(receive2.getTime()));
             rs=pStatement.executeQuery();
             //geting resultset count
             int number=0;
@@ -161,7 +164,7 @@ public class DBService {
         }
     }
 
-    public DataModel[] getDataFromShops2(String partNumber, String partName, String vendor, Integer qty, Date shipped1, Date shipped2, Date receive1, Date receive2) {
+    DataModel[] getDataFromShops2(String partNumber, String partName, String vendor, Integer qty, Date shipped1, Date shipped2, Date receive1, Date receive2) {
         DataModel[] result;
         try {
             dbcon = LoadDriver("jdbc:postgresql://localhost/OnlineShop", "postgres" ,"123","org.postgresql.Driver" );
@@ -177,7 +180,7 @@ public class DBService {
             if (shipped1 !=null) pStatement.setDate(i++, new java.sql.Date(shipped1.getTime()));
             if (shipped2 !=null) pStatement.setDate(i++, new java.sql.Date(shipped2.getTime()));
             if (receive1 !=null) pStatement.setDate(i++, new java.sql.Date(receive1.getTime()));
-            if (receive2 !=null) pStatement.setDate(i++, new java.sql.Date(receive2.getTime()));
+            if (receive2 !=null) pStatement.setDate(i, new java.sql.Date(receive2.getTime()));
             rs=pStatement.executeQuery();
             //geting resultset count
             int number=0;

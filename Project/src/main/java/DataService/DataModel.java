@@ -21,7 +21,7 @@ public class DataModel {
 
     private static Logger log = Logger.getLogger(DataModel.class.getName());
 
-    public DataModel(String partNumber, String partName, String vendor, Integer qty, Date shipped, Date receive) {
+    DataModel(String partNumber, String partName, String vendor, Integer qty, Date shipped, Date receive) {
         PartName = partName;
         PartNumber = partNumber;
         Vendor = vendor;
@@ -29,7 +29,7 @@ public class DataModel {
         Shipped = shipped;
         Receive = receive;
     }
-    public DataModel(String partNumber, String partName, String vendor, String qty, String shipped, String receive) {
+    DataModel(String partNumber, String partName, String vendor, String qty, String shipped, String receive) {
         SimpleDateFormat formatter = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         PartName = partName;
         PartNumber = partNumber;
@@ -44,28 +44,28 @@ public class DataModel {
         }
     }
 
-    public String getPartNumber() {
+    String getPartNumber() {
         return PartNumber;
     }
 
-    public String getPartName() {
+    String getPartName() {
         return PartName;
     }
 
 
-    public String getVendor() {
+    String getVendor() {
         return Vendor;
     }
 
-    public Integer getQty() {
+    Integer getQty() {
         return Qty;
     }
 
-    public Date getShipped() {
+    Date getShipped() {
         return Shipped;
     }
 
-    public Date getReceive() {
+    Date getReceive() {
         return Receive;
     }
 
