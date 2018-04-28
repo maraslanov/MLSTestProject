@@ -50,7 +50,7 @@ public class DBServiceTest extends DBService {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        DataModel[] realdm=getDataFromShops(partNumber, partName,  vendor,  Qty,  ShippedAfter ,  ShippedBefore,  ReceiveAfter,  ReceiveBefore);
+        DataModel[] realdm=getDataFromShops2(partNumber, partName,  vendor,  Qty,  ShippedAfter ,  ShippedBefore,  ReceiveAfter,  ReceiveBefore);
         Assert.assertEquals(testdm[0].getPartName(),realdm[0].getPartName());
         Assert.assertEquals(testdm[0].getPartNumber(),realdm[0].getPartNumber());
         Assert.assertEquals(testdm[0].getVendor(),realdm[0].getVendor());

@@ -50,6 +50,7 @@ public class FilterDataServlet extends HttpServlet {
             log.log(Level.SEVERE, "Exception: ", e);
         }
         //getting data from db.properties
+        System.out.println(PN+" "+PartName+" "+Vendor+" "+Qty+" "+ShippedAfter+" "+ShippedBefore+" "+ReceiveAfter+" "+ReceiveBefore);
         DataModel[] values = getDataModels(PN, PartName, Vendor, Qty, ShippedAfter, ShippedBefore, ReceiveAfter, ReceiveBefore);
         req.setAttribute("DataArray", values);
         //forward from servlet to a JSP (for filling table)
